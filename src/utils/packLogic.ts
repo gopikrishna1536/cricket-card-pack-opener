@@ -1,8 +1,8 @@
-import  { players } from '../data/players';
+import { players } from '../data/players';
 import { Player } from '../types';
 
 export const getPackOdds = (packType: string) => {
-  switch (packType) {
+  switch (packType.toLowerCase()) {
     case 'bronze':
       return { common: 0.6, rare: 0.3, epic: 0.09, legend: 0.01 };
     case 'silver':
@@ -20,18 +20,20 @@ export const openPack = (packType: string): Player[] => {
   
   for (let i = 0; i < 5; i++) {
     const random = Math.random();
-    let tier: string;
+    let tier: Player['tier'];
     
-    if (random < odds.legend) tier = 'legend';
-    else if (random < odds.legend + odds.epic) tier = 'epic';
-    else if (random < odds.legend + odds.epic + odds.rare) tier = 'rare';
-    else tier = 'common';
+    if (random < odds.legend) tier = 'Legend';
+    else if (random < odds.legend + odds.epic) tier = 'Epic';
+    else if (random < odds.legend + odds.epic + odds.rare) tier = 'Rare';
+    else tier = 'Common';
     
     const availablePlayers = players.filter(p => p.tier === tier);
-    const randomPlayer = availablePlayers[Math.floor(Math.random() * availablePlayers.length)];
+    const pool = availablePlayers.length > 0 ? availablePlayers : players;
+    const randomPlayer = pool[Math.floor(Math.random() * pool.length)];
     pack.push(randomPlayer);
   }
   
   return pack;
 };
+
  
